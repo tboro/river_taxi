@@ -1,2 +1,2 @@
-/home/tborodziuk/Pulpit/river_taxi_backup/river_taxi/platforms/android/ant-build/AndroidManifest.xml : \
-/home/tborodziuk/Pulpit/river_taxi_backup/river_taxi/platforms/android/AndroidManifest.xml \
+/var/www/html/RT/rivertaxi/platforms/android/ant-build/AndroidManifest.xml : \
+/var/www/html/RT/rivertaxi/platforms/android/AndroidManifest.xml \

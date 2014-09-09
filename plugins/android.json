@@ -13,7 +13,15 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"Notification\"><param name=\"android-package\" value=\"org.apache.cordova.dialogs.Notification\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"Vibration\"><param name=\"android-package\" value=\"org.apache.cordova.vibration.Vibration\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"SplashScreen\"><param name=\"android-package\" value=\"org.apache.cordova.splashscreen.SplashScreen\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -33,10 +41,16 @@
     },
     "installed_plugins": {
         "org.apache.cordova.device-motion": {
-            "PACKAGE_NAME": "com.phonegap.helloworld"
+            "PACKAGE_NAME": "org.tbo.rivertaxi"
+        },
+        "org.apache.cordova.dialogs": {
+            "PACKAGE_NAME": "org.tbo.rivertaxi"
         },
         "org.apache.cordova.vibration": {
-            "PACKAGE_NAME": "com.phonegap.helloworld"
+            "PACKAGE_NAME": "org.tbo.rivertaxi"
+        },
+        "org.apache.cordova.splashscreen": {
+            "PACKAGE_NAME": "org.tbo.rivertaxi"
         }
     },
     "dependent_plugins": {}
