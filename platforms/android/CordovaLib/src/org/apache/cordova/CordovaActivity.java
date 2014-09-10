@@ -715,7 +715,7 @@ public class CordovaActivity extends Activity implements CordovaInterface {
         
 
         //Code to test CB-3064
-        String errorUrl = Config.getErrorUrl();
+        String errorUrl = this.getStringProperty("ErrorUrl", null);
         LOG.d(TAG, "CB-3064: The errorUrl is " + errorUrl);
           
         if (this.activityState == ACTIVITY_STARTING) {

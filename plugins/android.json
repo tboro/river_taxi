@@ -17,11 +17,11 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Vibration\"><param name=\"android-package\" value=\"org.apache.cordova.vibration.Vibration\" /></feature>",
+                            "xml": "<feature name=\"SplashScreen\"><param name=\"android-package\" value=\"org.apache.cordova.splashscreen.SplashScreen\" /></feature>",
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"SplashScreen\"><param name=\"android-package\" value=\"org.apache.cordova.splashscreen.SplashScreen\" /></feature>",
+                            "xml": "<feature name=\"Vibration\"><param name=\"android-package\" value=\"org.apache.cordova.vibration.Vibration\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -46,10 +46,10 @@
         "org.apache.cordova.dialogs": {
             "PACKAGE_NAME": "org.tbo.rivertaxi"
         },
-        "org.apache.cordova.vibration": {
+        "org.apache.cordova.splashscreen": {
             "PACKAGE_NAME": "org.tbo.rivertaxi"
         },
-        "org.apache.cordova.splashscreen": {
+        "org.apache.cordova.vibration": {
             "PACKAGE_NAME": "org.tbo.rivertaxi"
         }
     },
