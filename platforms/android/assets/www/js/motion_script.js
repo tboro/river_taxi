@@ -84,7 +84,7 @@ function getSign(number) {
 // moveObject
 function moveObject(acceleration) {
     var minDistanceFromBorder = [];
-    minDistanceFromBorder['top'] = 90;
+    minDistanceFromBorder['top'] = 120;
     minDistanceFromBorder['bottom'] = 20;
     minDistanceFromBorder['right'] = 20;
     minDistanceFromBorder['left'] = 20;
@@ -136,7 +136,7 @@ function moveObject(acceleration) {
     rotateKanuXY(moveX,moveY,animationSpeed);
     
     var speedMod = (-0.5+(objOffset.top-topBoundary)/(bottomBoundary-topBoundary))*2;
-    $('.points').html(speedMod+'+'+objOffset.top+'+'+bottomBoundary);
+    $('.points').html("Points: "+points);
     moveX = moveX;
     moveY = moveY;
     

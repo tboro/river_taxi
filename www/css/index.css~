@@ -1,0 +1,289 @@
+html, body{
+ margin: 0;
+ padding: 0;
+ border: 0;
+}
+ 
+body {
+ font-family:Arial,  sans-serif;
+ line-height:1.5;
+ font-size:16px;
+ background: #DAF536;
+ padding:5px;
+ color: #000;
+ word-wrap: break-word;
+ -webkit-text-size-adjust: none;
+}
+ 
+h1, h2, h3, h4, h5, h6{ font-weight: normal; }
+ 
+p img { float: left; margin: 0 10px 5px 0; padding: 0; }
+ 
+img { border: 0; max-width: 100%; }
+
+/*  Main Styles */
+ 
+body{
+    background: #BCB6AF;
+}
+
+header, footer{
+    position: fixed;
+    background-color:#188199;
+    padding:0;
+    z-index:3;
+    width:100%;
+    text-align:center;
+    color:#FFFFFF;
+    font-weight:bold;
+    text-shadow:0 -1px 0 #aaa;
+}
+ 
+header{
+    top:20px; left:0;
+    height:45px;
+    border-bottom:3px solid #EBE3DB;
+    line-height:40px;
+    font-size:15px;
+}
+  
+footer {
+    bottom:0; left:0;
+    height:20px;
+    border-top:3px solid #EBE3DB;
+    padding-top: 8px;
+    line-height:10px;
+    font-size:10px;
+}
+ 
+header>span.title{
+    margin: 0;
+    text-transform: uppercase;
+    test-align: center;
+    font-size:25px;
+}
+ 
+#wrapper {
+    position:fixed;
+    z-index:1;
+    top:65px; bottom:25px; left:0;
+    width:100%;
+    overflow:hidden;
+    background-color: #A3DAFF;
+}
+
+.info_box {
+    position: absolute;
+    z-index: 100;
+    width:100%;
+    padding-top:5px;
+    padding-bottom:5px;
+    background-color: #FFFFFF;
+    color: #188199;
+    font-weight:bold;
+    text-align: center;
+}
+  
+.info_box_bottom {
+    bottom: 0px;
+    background-color: #FFFFFF;
+}
+
+#points_counter {
+    position: static;
+    background-color: #FFFFFF;
+}
+
+.points {
+    float: left;
+}
+
+.life {
+    float: right;
+}
+
+#position_info {
+    position: static;
+}
+
+#point {
+    width: 1px;
+    height: 1px;
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    background-color: red;
+}  
+
+#kanu {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    top: -25px;
+    left: -25px;
+    text-align: center;
+    background-color: rgba(24, 129, 153, 0.2);
+    border-radius: 50%;
+    z-index: 3;
+}
+
+.kanuInDanger {
+    background-color: rgba(211, 15, 9, 0.9) !important;
+}
+
+#kanu_img {
+    position: absolute;
+    height: 90px;
+    width: 23px;
+    top: -20px;
+    left: 14px;
+    background: url('../img/kanu.png');
+}
+
+.palm {
+    position: absolute;
+    height: 74px;
+    width: 70px;
+    top: -40px;
+    left: 0px;
+    z-index: 5;
+    background: url('../img/palm.png');
+}
+
+.obstacles_box {
+    position:absolute;
+    margin:0;
+    width:100%;
+    height:120%;
+    padding-top: -10%;
+    overflow:hidden;
+}
+
+.obstacle {
+    margin: 0;
+    position:relative;
+    width: 100%;
+    height: 30px;
+    background: #EBE3DB;
+    //background: linear-gradient(red, blue);
+    //background: radial-gradient( #C3B7AC, #EBE3DB, #E6F4F4, #E7E3D7, #E6F4F4);
+    border-radius: 25px;
+}
+
+.passenger {
+    position: absolute;
+    top: 0;
+    height: 1px;
+    width: 1px;
+    z-index: 4;
+}
+
+.passenger_body {
+    position: absolute;
+    top: 0px;
+    height: 16px;
+    width: 14px;
+    background: #188199;
+    border-radius: 50%;
+}
+
+.passenger_head {
+    position: absolute;
+    top: 2px;
+    left: -1px;
+    width: 11px;
+    height: 11px;
+    background-color: #FFA500;
+    border-radius: 50%;
+}
+
+.passenger_range {
+    position: absolute;
+    top: -15px;
+    left: -25px;
+    width: 40px;
+    height: 40px;
+    background-color: #FFA500;
+    opacity: 0.2;
+    border-radius: 50%;
+}
+
+.passenger_destination {
+    position: absolute;
+    top: -15px;
+    left: -25px;
+    width: 45px;
+    height: 45px;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    text-align: center;
+    color: #188199;
+    font-weight:bold;
+}
+
+#obstacles_box_R .passenger {
+    left: 0px;
+}
+
+#obstacles_box_L .passenger {
+    right: 4px;
+}
+
+#obstacles_box_L .passenger_head {
+    left:4px;
+}
+
+#obstacles_box_L .passenger_range,
+#obstacles_box_L .passenger_destination {
+    left:0px;
+}
+
+#kanu .passenger {
+    left: 18px;
+    top: 20px;
+    display: none;
+}
+
+#kanu .passenger_head {
+    left: 2px;
+    top:-1px;
+}
+
+#kanu .passenger_body {
+    height: 14px;
+    width: 16px;
+}
+
+#kanu .passenger_range,
+#kanu .passenger_destination {
+    display: none;
+}
+
+#accelerometer {
+    background: #A3DAFF;
+    color: #188199;
+}
+
+.button {
+    position: absolute;
+    top: 100px;
+    background: #FFFFFF;
+    color: #188199;
+    width: 120px;
+    height: 50px;
+    z-index: 100;
+    border-radius: 25px;
+    text-align: center;
+    padding-top:23px;
+    font-weight: bold;
+}
+
+#reload_button {
+    left: 10px;
+    background: #188199;
+    color: #FFFFFF
+}
+
+#pause_button, #start_button {
+    right: 10px;
+}

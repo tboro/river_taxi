@@ -8,7 +8,6 @@ body {
  font-family:Arial,  sans-serif;
  line-height:1.5;
  font-size:16px;
- background: #4FD3C8;
  padding:5px;
  color: #000;
  word-wrap: break-word;
@@ -24,17 +23,17 @@ img { border: 0; max-width: 100%; }
 /*  Main Styles */
  
 body{
-    background: #EBE3DB;
+    background: #BCB6AF;
 }
 
 header, footer{
     position: fixed;
-    background-color:#89BDAF;
+    background-color:#188199;
     padding:0;
     z-index:3;
     width:100%;
     text-align:center;
-    color:#f3f3f3;
+    color:#FFFFFF;
     font-weight:bold;
     text-shadow:0 -1px 0 #aaa;
 }
@@ -69,7 +68,7 @@ header>span.title{
     top:65px; bottom:25px; left:0;
     width:100%;
     overflow:hidden;
-    background-color: #A3EBDE;
+    background-color: #A3DAFF;
 }
 
 .info_box {
@@ -78,20 +77,20 @@ header>span.title{
     width:100%;
     padding-top:5px;
     padding-bottom:5px;
-    background-color: rgba(255,255,0,0.5);
-    color: #d34f59;
+    background-color: #FFFFFF;
+    color: #188199;
     font-weight:bold;
     text-align: center;
 }
   
 .info_box_bottom {
     bottom: 0px;
-    background-color: rgba(255,215,0,0.5);
+    background-color: #FFFFFF;
 }
 
 #points_counter {
     position: static;
-    background-color: rgba(255,0,0,0.4);
+    background-color: #FFFFFF;
 }
 
 .points {
@@ -122,7 +121,7 @@ header>span.title{
     top: -25px;
     left: -25px;
     text-align: center;
-    background-color: rgba(79, 211, 200, 0.2);
+    background-color: rgba(24, 129, 153, 0.2);
     border-radius: 50%;
     z-index: 3;
 }
@@ -164,7 +163,7 @@ header>span.title{
     position:relative;
     width: 100%;
     height: 30px;
-    background: #E6F4F4 url('../img/sand.jpg') repeat;
+    background: #EBE3DB;
     //background: linear-gradient(red, blue);
     //background: radial-gradient( #C3B7AC, #EBE3DB, #E6F4F4, #E7E3D7, #E6F4F4);
     border-radius: 25px;
@@ -183,7 +182,7 @@ header>span.title{
     top: 0px;
     height: 16px;
     width: 14px;
-    background: #ed1c24;
+    background: #188199;
     border-radius: 50%;
 }
 
@@ -193,7 +192,7 @@ header>span.title{
     left: -1px;
     width: 11px;
     height: 11px;
-    background-color: #f8bb00;
+    background-color: #FFA500;
     border-radius: 50%;
 }
 
@@ -203,7 +202,7 @@ header>span.title{
     left: -25px;
     width: 40px;
     height: 40px;
-    background-color: #005aff;
+    background-color: #FFA500;
     opacity: 0.2;
     border-radius: 50%;
 }
@@ -214,10 +213,10 @@ header>span.title{
     left: -25px;
     width: 45px;
     height: 45px;
-    background-color: #ffa500;
+    background-color: #FFFFFF;
     border-radius: 50%;
     text-align: center;
-    color: #d34f59;
+    color: #188199;
     font-weight:bold;
 }
 
@@ -260,27 +259,28 @@ header>span.title{
 }
 
 #accelerometer {
-    background: #4FD3C8;
-    color: #f3f3f3;
+    background: #A3DAFF;
+    color: #188199;
 }
 
 .button {
     position: absolute;
-    top: 60px;
+    top: 100px;
     background: #FFFFFF;
-    color: #D30F09;
-    width: 80px;
-    height: 25px;
+    color: #188199;
+    width: 120px;
+    height: 50px;
     z-index: 100;
     border-radius: 25px;
     text-align: center;
-    padding:3px;
+    padding-top:23px;
     font-weight: bold;
 }
 
 #reload_button {
     left: 10px;
-    background: #aaa;
+    background: #188199;
+    color: #FFFFFF
 }
 
 #pause_button, #start_button {
