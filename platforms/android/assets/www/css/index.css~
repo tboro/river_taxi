@@ -8,7 +8,6 @@ body {
  font-family:Arial,  sans-serif;
  line-height:1.5;
  font-size:16px;
- background: #DAF536;
  padding:5px;
  color: #000;
  word-wrap: break-word;
@@ -56,8 +55,8 @@ footer {
     font-size:10px;
 }
  
-header>span.title{
-    margin: 0;
+header > span.title{
+    margin-top: 2px;
     text-transform: uppercase;
     test-align: center;
     font-size:25px;
@@ -265,25 +264,24 @@ header>span.title{
 }
 
 .button {
-    position: absolute;
-    top: 100px;
-    background: #FFFFFF;
-    color: #188199;
-    width: 120px;
-    height: 50px;
+    position: fixed;
+    top: 21px;
+    height: 39px;
+    width: 80px;
+    background: #188199;
+    color: #FFFFFF;
+    border: solid 2px #FFFFFF;
     z-index: 100;
     border-radius: 25px;
     text-align: center;
-    padding-top:23px;
+    font-size: 18px;
     font-weight: bold;
 }
 
 #reload_button {
-    left: 10px;
-    background: #188199;
-    color: #FFFFFF
+    left: 1px;
 }
 
 #pause_button, #start_button {
-    right: 10px;
+    right: 1px;
 }
