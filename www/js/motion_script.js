@@ -13,15 +13,20 @@ function onDeviceReady() {
     $('.ui-loader').remove();
     
     $('#accelerometer').hide();
+    $('#start_button').show();
+    $('#reload_button').show();
+    $('#pause_button').hide();
     
     $('#start_button').click(function() {
         $('#start_button').hide();
+        $('#pause_button').show();
         startWatch();
     });
     
     $( "#pause_button" ).click(function() {
         stopWatch();
         $('#start_button').show();
+        $('#pause_button').hide();
     });
     
     $( "#reload_button" ).click(function() {
@@ -398,6 +403,7 @@ function nextObestacles(animationSpeed) {
 
     if(direction=='S') {
         if($('#buffor_LS .obstacle').length == 0) {
+            obstacle.children('.obstacle').removeClass('compress').removeClass('decompress');
             riverParams[direction,'sinmod'] = Math.sin((current_row+nb_obstacles)/riverParams[direction,'idiv'])*riverParams[direction,'mul'];
             obstacle.children('.obstacle').css(
                 'left',(-riverParams[direction,'space']-(100-riverParams[direction,'center'])+riverParams[direction,'sinmod'])+"%"
@@ -435,9 +441,8 @@ function nextObestacles(animationSpeed) {
     }
     else if(direction=='N') {
         if($('#buffor_LN .obstacle').length == 0) {
-            riverParams[direction,'sinmod'] = Math.sin((current_row)/riverParams[direction,'idiv'])*riverParams[direction,'mul'];
-            
             obstacle.children('.obstacle').removeClass('compress').addClass('decompress');
+            riverParams[direction,'sinmod'] = Math.sin((current_row)/riverParams[direction,'idiv'])*riverParams[direction,'mul'];
             
             obstacle.children('.obstacle').css('left',(-riverParams[direction,'space']-(100-riverParams[direction,'center'])+riverParams[direction,'sinmod'])+"%");
             boxL.prepend(obstacle.html());
