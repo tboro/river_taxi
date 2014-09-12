@@ -1,4 +1,4 @@
-/var/www/html/RT/river_taxi/platforms/android/ant-build/RiverTaxi-debug-unaligned.apk : \
-/var/www/html/RT/river_taxi/platforms/android/ant-build/RiverTaxi.ap_ \
-/var/www/html/RT/river_taxi/platforms/android/ant-build/classes.dex \
-/var/www/html/RT/river_taxi/platforms/android/CordovaLib/ant-build/classes.jar \
+/var/www/html/river_taxi/platforms/android/ant-build/RiverTaxi-debug-unaligned.apk : \
+/var/www/html/river_taxi/platforms/android/ant-build/RiverTaxi.ap_ \
+/var/www/html/river_taxi/platforms/android/ant-build/classes.dex \
+/var/www/html/river_taxi/platforms/android/CordovaLib/ant-build/classes.jar \

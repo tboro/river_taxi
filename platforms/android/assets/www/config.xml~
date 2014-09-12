@@ -2,7 +2,7 @@
 <widget id="org.tbo.rivertaxi" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>RiverTaxi</name>
     <description>
-        Hello World sample application that responds to the deviceready event.
+        game app
     </description>
     <author email="support@phonegap.com" href="http://phonegap.com">
         PhoneGap Team
@@ -42,7 +42,7 @@
     <gap:plugin name="org.apache.cordova.splashscreen" />
     <gap:plugin name="org.apache.cordova.vibration" />
     <icon src="www/icon.png" />
-    <icon gap:density="hdpi" gap:platform="android" src="www/res/icon/android/icon-72-hdpi.png" />
+    <icon gap:density="hdpi" gap:platform="android" gap:qualifier="hdpi" src="www/res/icon/android/icon-72-hdpi.png" />
     <icon gap:density="ldpi" gap:platform="android" gap:qualifier="ldpi" src="www/res/icon/android/icon-36-ldpi.png" />
     <icon gap:density="mdpi" gap:platform="android" gap:qualifier="mdpi" src="www/res/icon/android/icon-48-mdpi.png" />
     <icon gap:density="xhdpi" gap:platform="android" gap:qualifier="xhdpi" src="www/res/icon/android/icon-96-xhdpi.png" />

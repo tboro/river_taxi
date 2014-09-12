@@ -420,24 +420,38 @@ function nextObestacles() {
             $('#buffor_RS').children('.obstacle').last().appendTo(boxR);
         }
         
-        boxL.children('.obstacle').first().appendTo('#buffor_LN');
-        boxR.children('.obstacle').first().appendTo('#buffor_RN');
+        var firstL = boxL.children('.obstacle').first();
+        var firstR = boxR.children('.obstacle').first();
+        firstL.removeClass('decompress').removeClass('compress');
+        firstR.removeClass('decompress').removeClass('compress');
+
+        setTimeout(function() { firstL.height(25); firstR.height(25); }, 30);
+        setTimeout(function() { firstL.height(20); firstR.height(20); }, 60);
+        setTimeout(function() { firstL.height(15); firstR.height(15); }, 90);
+        setTimeout(function() { firstL.height(10); firstR.height(10); }, 120);
+        setTimeout(function() { firstL.height(5); firstR.height(5); }, 150);
+        setTimeout(function() { 
+            firstL.appendTo('#buffor_LN').height(30);
+            firstR.appendTo('#buffor_RN').height(30);
+        }, 180);
     }
     else if(direction=='N') {
         if($('#buffor_LN .obstacle').length == 0) {
             riverParams[direction,'sinmod'] = Math.sin((current_row)/riverParams[direction,'idiv'])*riverParams[direction,'mul'];
             obstacle.children('.obstacle').css('left',(-riverParams[direction,'space']-(100-riverParams[direction,'center'])+riverParams[direction,'sinmod'])+"%");
             boxL.prepend(obstacle.html());
+            boxL.children('.obstacle').first().removeClass('compress').addClass('decompress');
             obstacle.children('.obstacle').css('left',(riverParams[direction,'space']+riverParams[direction,'center']+riverParams[direction,'sinmod'])+"%");
             boxR.prepend(obstacle.html());
+            boxR.children('.obstacle').first().removeClass('compress').addClass('decompress');
             addContent(boxL.children('.obstacle').first());
             addContent(boxR.children('.obstacle').first());
             updateObestaclesSettings();
         }
         else {
             current_row++;
-            $('#buffor_LN').children('.obstacle').last().prependTo(boxL);
-            $('#buffor_RN').children('.obstacle').last().prependTo(boxR);
+            $('#buffor_LN').children('.obstacle').last().removeClass('compress').addClass('decompress').prependTo(boxL);
+            $('#buffor_RN').children('.obstacle').last().removeClass('compress').addClass('decompress').prependTo(boxR);
         }
 
         boxL.children('.obstacle').last().appendTo('#buffor_LS');

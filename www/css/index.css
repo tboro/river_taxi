@@ -168,6 +168,42 @@ header > span.title{
     border-radius: 25px;
 }
 
+.decompress {
+    height: 30px !important;
+    -webkit-animation: decompress 190ms;
+    animation: decompress 190ms;  
+}
+
+.compress {
+    height: 1px !important;
+    -webkit-animation: compress 190ms;
+    animation: compress 190ms;  
+}
+
+@-webkit-keyframes decompress {
+    0%   {height:1px;}
+    50%   {height:15px;}
+    100% {height:30px;}
+}
+
+@keyframes decompress {
+    0%   {height:1px;}
+    50%   {height:15px;}
+    100% {height:30px;}
+}
+
+@-webkit-keyframes compress {
+    0%   {height:30px;}
+    50%   {height:15px;}
+    100% {height:1px;}
+}
+
+@keyframes compress {
+    0%   {height:30px;}
+    50%   {height:15px;}
+    100% {height:1px;}
+}
+
 .passenger {
     position: absolute;
     top: 0;
