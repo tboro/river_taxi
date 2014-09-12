@@ -27,16 +27,6 @@ function onDeviceReady() {
     $( "#reload_button" ).click(function() {
         location.reload();
     });
-    
-    $(".title").click(function(){
-        $(this).addClass("decompress");
-        $(this).text("plum").delay(1000).text("PIIM").delay(1000).text("plffum");
-        var thi = $(this);
-        setTimeout(function() {
-            thi.text("2000");
-        }, 2000);
-        $('.title').replaceWith($('.title'));
-    });
 }
 
 // Start watching the acceleration

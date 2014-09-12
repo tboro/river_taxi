@@ -84,7 +84,7 @@ function getSign(number) {
 // moveObject
 function moveObject(acceleration) {
     var minDistanceFromBorder = [];
-    minDistanceFromBorder['top'] = 120;
+    minDistanceFromBorder['top'] = 150;
     minDistanceFromBorder['bottom'] = 20;
     minDistanceFromBorder['right'] = 20;
     minDistanceFromBorder['left'] = 20;
@@ -101,7 +101,7 @@ function moveObject(acceleration) {
     var moveX = 0;
     var moveY = 0;
     var speed = frequency/8;
-    var animationSpeed = frequency-1;
+    var animationSpeed = frequency-10;
     var stability = 0.5;
         
     if (Math.abs(acceleration.x) > stability) {
@@ -166,7 +166,7 @@ function moveObject(acceleration) {
         }
     }
         
-    nextObestacles();
+    nextObestacles(animationSpeed);
 }
 
 function checkPassengers(oLeft, oTop){
@@ -373,7 +373,7 @@ function correctObestaclesSettings() {
 }
 
 function setObestacles() {
-    nb_obstacles = Math.ceil(Math.max($('#wrapper').height(),$('#wrapper').width())/30);
+    nb_obstacles = Math.ceil(Math.max($('#wrapper').height(),$('#wrapper').width())/30)+1;
     riverParams[direction,'idiv'] = nb_obstacles/(2*Math.PI);
     
     var boxL = $('#obstacles_box_L');
@@ -390,12 +390,11 @@ function setObestacles() {
     direction = 'N';
 }
 
-function nextObestacles() {
+function nextObestacles(animationSpeed) {
     var boxL = $('#obstacles_box_L');
     var boxR = $('#obstacles_box_R');
     var obstacle = $('#obstacle_tpl');
-    
-    if(boxL.children('.obstacle').length<10) setObestacles();
+    if(boxL.children('.obstacle').length<5) setObestacles();
 
     if(direction=='S') {
         if($('#buffor_LS .obstacle').length == 0) {
@@ -420,32 +419,35 @@ function nextObestacles() {
             $('#buffor_RS').children('.obstacle').last().appendTo(boxR);
         }
         
+        //add compress css animation to the first obstacles
         var firstL = boxL.children('.obstacle').first();
         var firstR = boxR.children('.obstacle').first();
-        firstL.removeClass('decompress').removeClass('compress');
-        firstR.removeClass('decompress').removeClass('compress');
-
-        setTimeout(function() { firstL.height(25); firstR.height(25); }, 30);
-        setTimeout(function() { firstL.height(20); firstR.height(20); }, 60);
-        setTimeout(function() { firstL.height(15); firstR.height(15); }, 90);
-        setTimeout(function() { firstL.height(10); firstR.height(10); }, 120);
-        setTimeout(function() { firstL.height(5); firstR.height(5); }, 150);
-        setTimeout(function() { 
-            firstL.appendTo('#buffor_LN').height(30);
-            firstR.appendTo('#buffor_RN').height(30);
-        }, 180);
+        firstL.removeClass('decompress').addClass('compress');
+        firstR.removeClass('decompress').addClass('compress');
+        firstL.html(firstL.html());
+        firstR.html(firstR.html()); 
+        
+        //move first obstacles to buffors after 150ms
+        setTimeout(function() {
+            firstL.appendTo('#buffor_LN').removeClass('compress').addClass('decompress');
+            firstR.appendTo('#buffor_RN').removeClass('compress').addClass('decompress');
+        }, animationSpeed*3/4);
     }
     else if(direction=='N') {
         if($('#buffor_LN .obstacle').length == 0) {
             riverParams[direction,'sinmod'] = Math.sin((current_row)/riverParams[direction,'idiv'])*riverParams[direction,'mul'];
+            
+            obstacle.children('.obstacle').removeClass('compress').addClass('decompress');
+            
             obstacle.children('.obstacle').css('left',(-riverParams[direction,'space']-(100-riverParams[direction,'center'])+riverParams[direction,'sinmod'])+"%");
             boxL.prepend(obstacle.html());
-            boxL.children('.obstacle').first().removeClass('compress').addClass('decompress');
-            obstacle.children('.obstacle').css('left',(riverParams[direction,'space']+riverParams[direction,'center']+riverParams[direction,'sinmod'])+"%");
+            
+            obstacle.children('.obstacle').css('left',(riverParams[direction,'space']+riverParams[direction,'center']+riverParams[direction,'sinmod'])+"%");            
             boxR.prepend(obstacle.html());
-            boxR.children('.obstacle').first().removeClass('compress').addClass('decompress');
+            
             addContent(boxL.children('.obstacle').first());
             addContent(boxR.children('.obstacle').first());
+            
             updateObestaclesSettings();
         }
         else {
