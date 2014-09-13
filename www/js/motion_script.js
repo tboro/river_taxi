@@ -97,8 +97,8 @@ var moveX = 0;
 var moveY = 0;
 function moveObject(acceleration) {
     var minDistanceFromBorder = [];
-    minDistanceFromBorder['top'] = 170;
-    minDistanceFromBorder['bottom'] = 80;
+    minDistanceFromBorder['top'] = 180;
+    minDistanceFromBorder['bottom'] = 90;
     minDistanceFromBorder['right'] = 20;
     minDistanceFromBorder['left'] = 20;
 
@@ -115,7 +115,7 @@ function moveObject(acceleration) {
     moveY = 0;
     var speed = frequency/8;
     var animationSpeed = frequency-10;
-    var stability = 0.8;
+    var stability = 0.2;
         
     if (Math.abs(acceleration.x) > stability) {
         moveX = -acceleration.x * speed;
@@ -406,9 +406,14 @@ function updateObestaclesSettings() {
 
 function correctObestaclesSettings() {
     if(riverParams[direction,'space']<15) { riverParams[direction,'space_mod']=1; }
-    if(riverParams[direction,'space']>40) { riverParams[direction,'space_mod']=-1; }
-    if(riverParams[direction,'center']-5<riverParams[direction,'space']/2) { riverParams[direction,'center_mod']=1; }
-    if(riverParams[direction,'center']+5>(100-riverParams[direction,'space']/2)) { riverParams[direction,'center_mod']=-1; }
+    if(riverParams[direction,'space']>20) { riverParams[direction,'space_mod']=-1; }
+    
+    if(riverParams[direction,'center']-20<riverParams[direction,'space']) { riverParams[direction,'center_mod']=1; }
+    if(riverParams[direction,'center']+20>(100-riverParams[direction,'space'])) { riverParams[direction,'center_mod']=-1; }
+    if(riverParams[direction,'center']-10<riverParams[direction,'space']) { riverParams[direction,'center_mod']=2; }
+    if(riverParams[direction,'center']+10>(100-riverParams[direction,'space'])) { riverParams[direction,'center_mod']=-2; }
+    if(riverParams[direction,'center']<riverParams[direction,'space']) { riverParams[direction,'center_mod']=3; }
+    if(riverParams[direction,'center']>(100-riverParams[direction,'space'])) { riverParams[direction,'center_mod']=-3; }
 }
 
 function setObestacles() {
