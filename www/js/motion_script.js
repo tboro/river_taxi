@@ -16,6 +16,7 @@ function onDeviceReady() {
         $('#start_button').show();
         $('#pause_button').hide();
         window.plugins.insomnia.allowSleepAgain();
+        if(screen.orientation != 'undefined') screen.unlockOrientation();
     });
     
     
@@ -26,6 +27,7 @@ function onDeviceReady() {
             $('#pause_button').show();
             startWatch();
             window.plugins.insomnia.keepAwake();
+            if(screen.orientation != 'undefined') screen.lockOrientation(getScreenOrientation(window.orientation));
         });
         $('#start_button').click();
     });
@@ -530,4 +532,12 @@ function addPassengerDestination() {
         box.find('.passenger_destination').html(passenger_destination_row);
         destination_inserted=true;
     }
+}
+
+function getScreenOrientation(windowOrientation) {
+    if(windowOrientation == 0) return 'portrait-primary';
+    if(windowOrientation == 90) return 'landscape-primary';
+    if(windowOrientation == 180) return 'portrait-secondary';
+    if(windowOrientation == -90) return 'landscape-secondary';
+    return 'portrait-primary';
 }
