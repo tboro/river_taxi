@@ -92,8 +92,16 @@ header > span.title{
     background-color: #FFFFFF;
 }
 
+#param_info {
+    font-size: 25px;
+}
+
 .points {
     float: left;
+}
+
+.important_info {
+    color: #ed1c24 !important;
 }
 
 .life {

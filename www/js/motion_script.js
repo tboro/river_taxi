@@ -9,29 +9,33 @@ var life = 250;
 document.addEventListener("deviceready", onDeviceReady, false);
 
 // device APIs are available
-function onDeviceReady() {    
-    $('.ui-loader').remove();
-    
-    $('#accelerometer').hide();
-    $('#start_button').show();
-    $('#reload_button').show();
-    $('#pause_button').hide();
-    
-    $('#start_button').click(function() {
-        $('#start_button').hide();
-        $('#pause_button').show();
-        startWatch();
-    });
-    
-    $( "#pause_button" ).click(function() {
+function onDeviceReady() {
+    $('#pause_button').hide();   
+    $("#pause_button").click(function() {
         stopWatch();
         $('#start_button').show();
         $('#pause_button').hide();
+        window.plugins.insomnia.allowSleepAgain();
     });
     
-    $( "#reload_button" ).click(function() {
-        location.reload();
+    
+    $('#accelerometer').slideUp(3000);
+    $('#start_button').fadeIn(3000, function(){
+        $('#start_button').click(function() {
+            $('#start_button').hide();
+            $('#pause_button').show();
+            startWatch();
+            window.plugins.insomnia.keepAwake();
+        });
+        $('#start_button').click();
     });
+    $('#reload_button').fadeIn(3000, function(){
+        $( "#reload_button" ).click(function() {
+            location.reload();
+        });        
+    });
+    
+    $('.ui-loader').remove();
 }
 
 // Start watching the acceleration
@@ -109,7 +113,7 @@ function moveObject(acceleration) {
     moveY = 0;
     var speed = frequency/8;
     var animationSpeed = frequency-10;
-    var stability = 0.5;
+    var stability = 0.8;
         
     if (Math.abs(acceleration.x) > stability) {
         moveX = -acceleration.x * speed;
@@ -198,7 +202,8 @@ function checkPassengers(oLeft, oTop){
                 passenger.parent().remove();
                 $('#kanu .passenger').show();
                 passenger_destination_row = Math.abs(current_row + Math.floor((Math.random() * 50) -20));
-                $('#param_info').html('Passenger travels to: '+passenger_destination_row);     
+                $('#param_info').html('Passenger travels to: '+passenger_destination_row).addClass('important_info').hide().fadeIn(2000, function(){ $(this).removeClass('important_info'); });
+                navigator.notification.vibrate(200);
             }
         });
     } else {
@@ -211,7 +216,9 @@ function checkPassengers(oLeft, oTop){
                 $('#kanu .passenger').hide();
                 passenger_destination_row = 0;
                 $('#param_info').html(''); 
-                points++;                         
+                points++;
+                $('.points').addClass('important_info').hide().fadeIn(2000, function(){ $(this).removeClass('important_info'); });
+                navigator.notification.vibrate(200);
             }
         });
     }    
@@ -260,7 +267,6 @@ function checkPointCollisionWithObstacles(oLeft, oTop) {
     if(collisionLdetected ||  collisionRdetected) {
         life--;
         $('#kanu').addClass('kanuInDanger');
-        //navigator.notification.vibrate(frequency/2);
         return true;
     } else $('#kanu').removeClass('kanuInDanger');
     
