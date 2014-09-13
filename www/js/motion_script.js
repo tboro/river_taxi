@@ -87,6 +87,8 @@ function getSign(number) {
 }
 
 // moveObject
+var moveX = 0;
+var moveY = 0;
 function moveObject(acceleration) {
     var minDistanceFromBorder = [];
     minDistanceFromBorder['top'] = 170;
@@ -103,8 +105,8 @@ function moveObject(acceleration) {
     var rightBoundary = wall.width() - myObj.width() - minDistanceFromBorder['right'];
     var bottomBoundary = wall.height()- myObj.height() - minDistanceFromBorder['bottom'];
 
-    var moveX = 0;
-    var moveY = 0;
+    moveX = 0;
+    moveY = 0;
     var speed = frequency/8;
     var animationSpeed = frequency-10;
     var stability = 0.5;
@@ -143,9 +145,7 @@ function moveObject(acceleration) {
     if(Math.abs(moveX)>maxMove && Math.abs(moveX)>Math.abs(moveY)) mod = maxMove/Math.abs(moveX);
     else if(Math.abs(moveY)>maxMove) mod = maxMove/Math.abs(moveY);
     moveX=Math.floor(moveX*mod);
-    moveY=Math.floor(moveY*mod);    
-    
-    $('.points').html(moveX+'x'+moveY);
+    moveY=Math.floor(moveY*mod);
     
     direction = 'C';
     if(current_row>0 && prev_deg<270 && prev_deg>90) direction = 'S';
@@ -153,24 +153,35 @@ function moveObject(acceleration) {
     
     checkPassengers(objOffset.left+moveX, objOffset.top+moveY);
     
+    checkPointCollisionWithObstacles(objOffset.left+moveX, objOffset.top+moveY);
+    
     if(objOffset.left+moveX > rightBoundary || objOffset.left+moveX < leftBoundary || objOffset.top+moveY < topBoundary || objPosition.top+moveY > bottomBoundary) {
-        if(objOffset.left > rightBoundary) moveX=-1;
-        if(objOffset.left < leftBoundary) moveX=1;
-        if(objOffset.top < topBoundary) moveY=1;
-        if(objOffset.top > bottomBoundary) moveY=-1;
+        if(objOffset.left > rightBoundary) {
+            if(moveX>0) moveX=-1;
+            if(objOffset.left-rightBoundary > 2*maxMove) moveX = rightBoundary-objOffset.left;
+        }
+        if(objOffset.left < leftBoundary) {
+            if(moveX<0) moveX=1;
+            if(leftBoundary-objOffset.left > 2*maxMove) moveX = leftBoundary-objOffset.left;
+        }
+        if(objOffset.top < topBoundary) {
+            if(moveY<0) moveY=1;
+            if(direction=='S' && topBoundary-objOffset.top > 2*maxMove) moveY = topBoundary-objOffset.top;
+        }
+        if(objOffset.top > bottomBoundary) {
+            if(moveY>0) moveY=-1;
+            if(direction=='N' && objOffset.top-bottomBoundary > 2*maxMove) moveY = bottomBoundary-objOffset.top;
+        }
     }
     
     //move object according to accelerometer if it will not cause collision
-    var collisionDetected = checkPointCollisionWithObstacles(objOffset.left+moveX, objOffset.top+moveY);
-    if (!collisionDetected) {
-        var moveLeft = getSign(moveX)+'='+Math.abs(moveX);
-        var moveTop = getSign(moveY)+'='+Math.abs(moveY);
+    var moveLeft = getSign(moveX) + '=' + Math.abs(moveX);
+    var moveTop = getSign(moveY) + '=' + Math.abs(moveY);
 
-        myObj.stop().animate({
-            left: moveLeft,
-            top: moveTop
-        }, animationSpeed);
-    }
+    myObj.stop().animate({
+        left: moveLeft,
+        top: moveTop
+    }, animationSpeed);
     
     nextObestacles(animationSpeed);
 }
@@ -218,8 +229,15 @@ function checkPointCollisionWithObstacles(oLeft, oTop) {
         var obstacle = $(this);
         if( detectCollisionPointBox(oLeft,oTop,obstacle,kanuRadius) ) {
             collisionLdetected = true;
-            var obstaclePosition = obstacle.offset();
-            point.offset({ left: obstaclePosition.left+obstacle.width()+kanuRadius });
+            
+            //behavior canoe in case of a collision with the edge L
+            var obstacleOffset = obstacle.offset();
+            var oDistance = obstacleOffset.left+obstacle.width()-oLeft;
+            if(moveX<0 || Math.abs(oDistance)>kanuRadius) {
+                moveX= oDistance;
+                if(direction=='N') moveY=obstacle.height()/2;
+                if(direction=='S') moveY=-obstacle.height()/2;
+            }
         }
     });
     
@@ -227,8 +245,15 @@ function checkPointCollisionWithObstacles(oLeft, oTop) {
         var obstacle = $(this);
         if( detectCollisionPointBox(oLeft,oTop,obstacle,kanuRadius) ) {
             collisionRdetected = true;
-            var obstaclePosition = obstacle.offset();
-            point.offset({ left: obstaclePosition.left-kanuRadius });
+            
+            //behavior canoe in case of a collision with the edge R
+            var obstacleOffset = obstacle.offset();
+            var oDistance = obstacleOffset.left-oLeft;
+            if(moveX>0 || Math.abs(oDistance)>kanuRadius) {
+                moveX= oDistance;
+                if(direction=='N') moveY=obstacle.height()/2;
+                if(direction=='S') moveY=-obstacle.height()/2;
+            }
         }
     });
     
