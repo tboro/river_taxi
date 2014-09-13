@@ -203,7 +203,7 @@ function checkPassengers(oLeft, oTop){
                 passenger.css('background-color','yellow');
                 passenger.parent().remove();
                 $('#kanu .passenger').show();
-                passenger_destination_row = Math.abs(current_row + Math.floor((Math.random() * 50) -20));
+                passenger_destination_row = Math.abs(current_row + Math.floor((Math.random() * 60) -30))+1;
                 $('#param_info').html('Passenger travels to: '+passenger_destination_row).addClass('important_info').hide().fadeIn(2000, function(){ $(this).removeClass('important_info'); });
                 navigator.notification.vibrate(200);
             }
@@ -400,7 +400,7 @@ function updateObestaclesSettings() {
         }   
         riverParams[direction,'space'] += riverParams[direction,'space_mod'];
         
-        correctObestaclesSettings()
+        correctObestaclesSettings();
     }
 }
 
@@ -423,7 +423,7 @@ function setObestacles() {
     var boxL = $('#obstacles_box_L');
     var boxR = $('#obstacles_box_R');
     var obstacle = $('#obstacle_tpl');
-    
+    direction = 'N';
     for (var row = 0; row < nb_obstacles; row++) {
         riverParams[direction,'sinmod'] = Math.sin(row/riverParams[direction,'idiv'])*riverParams[direction,'mul'];
         obstacle.children('.obstacle').css('left',(-riverParams[direction,'space']-(100-riverParams[direction,'center'])+riverParams[direction,'sinmod'])+"%");
@@ -431,7 +431,6 @@ function setObestacles() {
         obstacle.children('.obstacle').css('left',(riverParams[direction,'space']+riverParams[direction,'center']+riverParams[direction,'sinmod'])+"%");
         boxR.append(obstacle.html());
     }
-    direction = 'N';
 }
 
 function nextObestacles(animationSpeed) {
@@ -492,6 +491,9 @@ function nextObestacles(animationSpeed) {
             addContent(boxL.children('.obstacle').first());
             addContent(boxR.children('.obstacle').first());
             
+            boxL.children('.obstacle').first().data('obstacleId',current_row+'L');
+            boxR.children('.obstacle').first().data('obstacleId',current_row+'R');
+            
             updateObestaclesSettings();
         }
         else {
@@ -524,18 +526,20 @@ var passenger_destination_row = 0;
 var destination_inserted = false;
 function addPassengerDestination() {
     if(passenger_destination_row==0) destination_inserted=false;
-    if(current_row==passenger_destination_row && current_row!=0 && !destination_inserted) {
-        var passengerDestTpl = $('#passenger_destination_tpl');
-        if(current_row%2==1) {
-            if(direction=='S') var box=$('#obstacles_box_L').children('.obstacle').last();
-            else var box=$('#obstacles_box_L').children('.obstacle').first(); 
-        } else {
-            if(direction=='S') var box=$('#obstacles_box_R').children('.obstacle').last();
-            else var box=$('#obstacles_box_R').children('.obstacle').first(); 
-        }
-        box.append(passengerDestTpl.html());
-        box.find('.passenger_destination').html(passenger_destination_row);
-        destination_inserted=true;
+    if(destination_inserted==false && passenger_destination_row!=0) {
+        var site = 'L';
+        if(passenger_destination_row%2==1) site = 'R';
+        
+        console.log(site);
+        $('#obstacles_box_'+site).children('.obstacle').each(function(){
+            if($(this).data('obstacleId') == passenger_destination_row+site) {
+                console.log("OK"+$(this).data('obstacleId'));
+                var passengerDestTpl = $('#passenger_destination_tpl');
+                $(this).append(passengerDestTpl.html());
+                $(this).find('.passenger_destination').html(passenger_destination_row);
+                destination_inserted=true;
+            }
+        });
     }
 }
 
