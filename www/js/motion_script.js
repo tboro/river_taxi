@@ -89,8 +89,8 @@ function getSign(number) {
 // moveObject
 function moveObject(acceleration) {
     var minDistanceFromBorder = [];
-    minDistanceFromBorder['top'] = 150;
-    minDistanceFromBorder['bottom'] = 20;
+    minDistanceFromBorder['top'] = 170;
+    minDistanceFromBorder['bottom'] = 80;
     minDistanceFromBorder['right'] = 20;
     minDistanceFromBorder['left'] = 20;
 
@@ -134,43 +134,44 @@ function moveObject(acceleration) {
         moveX = -moveX;
     }
     
+    $('.points').html("Points: "+points);
+    rotateKanuXY(moveX,moveY,animationSpeed);
+    
+    //limit for move
+    var maxMove = 15;
+    var mod = 1;
+    if(Math.abs(moveX)>maxMove && Math.abs(moveX)>Math.abs(moveY)) mod = maxMove/Math.abs(moveX);
+    else if(Math.abs(moveY)>maxMove) mod = maxMove/Math.abs(moveY);
+    moveX=Math.floor(moveX*mod);
+    moveY=Math.floor(moveY*mod);    
+    
+    $('.points').html(moveX+'x'+moveY);
+    
     direction = 'C';
     if(current_row>0 && prev_deg<270 && prev_deg>90) direction = 'S';
     if(prev_deg>=270 || prev_deg<=90) direction = 'N';
     
-    rotateKanuXY(moveX,moveY,animationSpeed);
-    
-    var speedMod = (-0.5+(objOffset.top-topBoundary)/(bottomBoundary-topBoundary))*2;
-    $('.points').html("Points: "+points);
-    moveX = moveX;
-    moveY = moveY;
-    
-    var moveLeft = getSign(moveX)+'='+Math.abs(moveX);
-    var moveTop = getSign(moveY)+'='+Math.abs(moveY);
-
     checkPassengers(objOffset.left+moveX, objOffset.top+moveY);
     
-    var collisionDetected = checkPointCollisionWithObstacles(objOffset.left+moveX, objOffset.top+moveY);
     if(objOffset.left+moveX > rightBoundary || objOffset.left+moveX < leftBoundary || objOffset.top+moveY < topBoundary || objPosition.top+moveY > bottomBoundary) {
-    //if object is out of screen
-        var left = objOffset.left;
-        var top = objOffset.top;
-        if(objOffset.left > rightBoundary) left = rightBoundary;
-        if(objOffset.left < leftBoundary) left = leftBoundary;
-        if(objOffset.top < topBoundary) top = topBoundary;
-        if(objOffset.top > bottomBoundary) top = bottomBoundary;
-        
-        myObj.offset({ top: top, left: left });
-    } else {
-        if(!collisionDetected) {
-            //move object according to accelerometer if it will not cause collision
-            myObj.stop().animate({
-                left: moveLeft,
-                top: moveTop
-            }, animationSpeed);
-        }
+        if(objOffset.left > rightBoundary) moveX=-1;
+        if(objOffset.left < leftBoundary) moveX=1;
+        if(objOffset.top < topBoundary) moveY=1;
+        if(objOffset.top > bottomBoundary) moveY=-1;
     }
-        
+    
+    //move object according to accelerometer if it will not cause collision
+    var collisionDetected = checkPointCollisionWithObstacles(objOffset.left+moveX, objOffset.top+moveY);
+    if (!collisionDetected) {
+        var moveLeft = getSign(moveX)+'='+Math.abs(moveX);
+        var moveTop = getSign(moveY)+'='+Math.abs(moveY);
+
+        myObj.stop().animate({
+            left: moveLeft,
+            top: moveTop
+        }, animationSpeed);
+    }
+    
     nextObestacles(animationSpeed);
 }
 
