@@ -189,7 +189,7 @@ function moveObject(acceleration) {
         top: moveTop
     }, animationSpeed);
     
-    nextObestacles(animationSpeed);
+    nextObestacles();
 }
 
 function checkPassengers(oLeft, oTop){
@@ -424,16 +424,20 @@ function setObestacles() {
     var boxR = $('#obstacles_box_R');
     var obstacle = $('#obstacle_tpl');
     direction = 'N';
-    for (var row = 0; row < nb_obstacles; row++) {
+    for (var row = 1; row <= nb_obstacles; row++) {
         riverParams[direction,'sinmod'] = Math.sin(row/riverParams[direction,'idiv'])*riverParams[direction,'mul'];
         obstacle.children('.obstacle').css('left',(-riverParams[direction,'space']-(100-riverParams[direction,'center'])+riverParams[direction,'sinmod'])+"%");
         boxL.append(obstacle.html());
         obstacle.children('.obstacle').css('left',(riverParams[direction,'space']+riverParams[direction,'center']+riverParams[direction,'sinmod'])+"%");
         boxR.append(obstacle.html());
+        
+        boxL.children('.obstacle').last().data('obstacleId',-row);
+        boxR.children('.obstacle').last().data('obstacleId',-row);
     }
 }
 
-function nextObestacles(animationSpeed) {
+function nextObestacles() {
+    moveCompressedToBuffors();
     var boxL = $('#obstacles_box_L');
     var boxR = $('#obstacles_box_R');
     var obstacle = $('#obstacle_tpl');
@@ -469,13 +473,8 @@ function nextObestacles(animationSpeed) {
         firstL.removeClass('decompress').addClass('compress');
         firstR.removeClass('decompress').addClass('compress');
         firstL.html(firstL.html());
-        firstR.html(firstR.html()); 
-        
-        //move first obstacles to buffors after 150ms
-        setTimeout(function() {
-            firstL.appendTo('#buffor_LN').removeClass('compress').addClass('decompress');
-            firstR.appendTo('#buffor_RN').removeClass('compress').addClass('decompress');
-        }, animationSpeed*3/4);
+        firstR.html(firstR.html());
+        //firstL and firstR will be moved to bufor at the start of next steep
     }
     else if(direction=='N') {
         if($('#buffor_LN .obstacle').length == 0) {
@@ -491,8 +490,8 @@ function nextObestacles(animationSpeed) {
             addContent(boxL.children('.obstacle').first());
             addContent(boxR.children('.obstacle').first());
             
-            boxL.children('.obstacle').first().data('obstacleId',current_row+'L');
-            boxR.children('.obstacle').first().data('obstacleId',current_row+'R');
+            boxL.children('.obstacle').first().data('obstacleId',current_row);
+            boxR.children('.obstacle').first().data('obstacleId',current_row);
             
             updateObestaclesSettings();
         }
@@ -506,6 +505,11 @@ function nextObestacles(animationSpeed) {
         boxR.children('.obstacle').last().appendTo('#buffor_RS');
     }
     addPassengerDestination();
+}
+
+function moveCompressedToBuffors(){
+    $('#obstacles_box_L').children('.compress').first().appendTo('#buffor_LN');
+    $('#obstacles_box_R').children('.compress').first().appendTo('#buffor_RN');
 }
 
 function addContent(box) {
@@ -530,10 +534,8 @@ function addPassengerDestination() {
         var site = 'L';
         if(passenger_destination_row%2==1) site = 'R';
         
-        console.log(site);
         $('#obstacles_box_'+site).children('.obstacle').each(function(){
-            if($(this).data('obstacleId') == passenger_destination_row+site) {
-                console.log("OK"+$(this).data('obstacleId'));
+            if($(this).data('obstacleId') == passenger_destination_row) {
                 var passengerDestTpl = $('#passenger_destination_tpl');
                 $(this).append(passengerDestTpl.html());
                 $(this).find('.passenger_destination').html(passenger_destination_row);
