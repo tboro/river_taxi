@@ -204,7 +204,9 @@ function checkPassengers(oLeft, oTop){
                 passenger.parent().remove();
                 $('#kanu .passenger').show();
                 passenger_destination_row = Math.abs(current_row + Math.floor((Math.random() * 60) -30))+1;
-                $('#param_info').html('Passenger travels to: '+passenger_destination_row).addClass('important_info').hide().fadeIn(2000, function(){ $(this).removeClass('important_info'); });
+                $('#param_info').find('.destination').html(passenger_destination_row);
+                $('#param_info').find('.arrow').html(getDestinationArrow());
+                $('#param_info').show().addClass('important_info').hide().fadeIn(2000, function(){ $(this).removeClass('important_info'); });
                 navigator.notification.vibrate(200);
             }
         });
@@ -217,13 +219,20 @@ function checkPassengers(oLeft, oTop){
                 passenger.parent().remove();
                 $('#kanu .passenger').hide();
                 passenger_destination_row = 0;
-                $('#param_info').html(''); 
+                $('#param_info').hide(); 
                 points++;
                 $('.points').addClass('important_info').hide().fadeIn(2000, function(){ $(this).removeClass('important_info'); });
                 navigator.notification.vibrate(200);
             }
         });
     }    
+}
+
+function getDestinationArrow() {
+    if(current_row < passenger_destination_row) return '&#8657;';
+    if(current_row-nb_obstacles < passenger_destination_row) return '&#8661;';
+    if(current_row-nb_obstacles > passenger_destination_row) return '&#8659;';
+    return '';
 }
 
 function checkPointCollisionWithObstacles(oLeft, oTop) {
@@ -530,6 +539,8 @@ var passenger_destination_row = 0;
 var destination_inserted = false;
 function addPassengerDestination() {
     if(passenger_destination_row==0) destination_inserted=false;
+    else $('#param_info').find('.arrow').html(getDestinationArrow());
+    
     if(destination_inserted==false && passenger_destination_row!=0) {
         var site = 'L';
         if(passenger_destination_row%2==1) site = 'R';
