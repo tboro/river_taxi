@@ -203,7 +203,12 @@ function checkPassengers(oLeft, oTop){
                 passenger.css('background-color','yellow');
                 passenger.parent().remove();
                 $('#kanu .passenger').show();
-                passenger_destination_row = Math.abs(current_row + Math.floor((Math.random() * 60) -30))+1;
+                
+                passenger_destination_row = current_row + Math.floor(Math.random() * 40)-20;
+                if(passenger_destination_row>10 && passenger_destination_row<current_row) passenger_destination_row = passenger_destination_row-10;
+                else passenger_destination_row = passenger_destination_row+10;
+                passenger_destination_row = Math.abs(passenger_destination_row);
+                
                 $('#param_info').find('.destination').html(passenger_destination_row);
                 $('#param_info').find('.arrow').html(getDestinationArrow());
                 $('#param_info').show().addClass('important_info').hide().fadeIn(2000, function(){ $(this).removeClass('important_info'); });
@@ -251,10 +256,10 @@ function checkPointCollisionWithObstacles(oLeft, oTop) {
             //behavior canoe in case of a collision with the edge L
             var obstacleOffset = obstacle.offset();
             var oDistance = obstacleOffset.left+obstacle.width()-oLeft;
-            if(moveX<0 || Math.abs(oDistance)>kanuRadius) {
-                moveX= oDistance;
-                if(direction=='N') moveY=obstacle.height()/2;
-                if(direction=='S') moveY=-obstacle.height()/2;
+            moveX=moveX+5;
+            if(moveX<=0 || Math.abs(oDistance)>kanuRadius) {
+                moveX = oDistance;
+                direction='C';
             }
         }
     });
@@ -267,20 +272,22 @@ function checkPointCollisionWithObstacles(oLeft, oTop) {
             //behavior canoe in case of a collision with the edge R
             var obstacleOffset = obstacle.offset();
             var oDistance = obstacleOffset.left-oLeft;
-            if(moveX>0 || Math.abs(oDistance)>kanuRadius) {
-                moveX= oDistance;
-                if(direction=='N') moveY=obstacle.height()/2;
-                if(direction=='S') moveY=-obstacle.height()/2;
+            moveX=moveX-5;
+            if(moveX>=0 || Math.abs(oDistance)>kanuRadius) {
+                moveX = oDistance;
+                direction='C';
             }
         }
     });
     
     if(collisionLdetected ||  collisionRdetected) {
         life--;
+        $('.life').addClass('important_info');
         $('#kanu').addClass('kanuInDanger');
         return true;
     } else $('#kanu').removeClass('kanuInDanger');
     
+    $('.life').removeClass('important_info');
     return false;
 }
 
@@ -383,7 +390,7 @@ function setDefaultRiverParams(direction) {
     riverParams[direction,'idiv'] = nb_obstacles/(2*Math.PI);
     riverParams[direction,'mul'] = 10;
     riverParams[direction,'center'] = 50;
-    riverParams[direction,'space'] = 20;
+    riverParams[direction,'space'] = 35;
     riverParams[direction,'center_mod'] = 0;
     riverParams[direction,'center_mod_next_change'] = 10;
     riverParams[direction,'space_mod'] = 0;
@@ -415,12 +422,14 @@ function updateObestaclesSettings() {
 
 function correctObestaclesSettings() {
     if(riverParams[direction,'space']<15) { riverParams[direction,'space_mod']=1; }
-    if(riverParams[direction,'space']>20) { riverParams[direction,'space_mod']=-1; }
+    if(riverParams[direction,'space']>30) { riverParams[direction,'space_mod']=-1; }
     
     if(riverParams[direction,'center']-20<riverParams[direction,'space']) { riverParams[direction,'center_mod']=1; }
     if(riverParams[direction,'center']+20>(100-riverParams[direction,'space'])) { riverParams[direction,'center_mod']=-1; }
+    
     if(riverParams[direction,'center']-10<riverParams[direction,'space']) { riverParams[direction,'center_mod']=2; }
     if(riverParams[direction,'center']+10>(100-riverParams[direction,'space'])) { riverParams[direction,'center_mod']=-2; }
+    
     if(riverParams[direction,'center']<riverParams[direction,'space']) { riverParams[direction,'center_mod']=3; }
     if(riverParams[direction,'center']>(100-riverParams[direction,'space'])) { riverParams[direction,'center_mod']=-3; }
 }
