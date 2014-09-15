@@ -1,6 +1,34 @@
 cordova.define('cordova/plugin_list', function(require, exports, module) {
 module.exports = [
     {
+        "file": "plugins/net.yoik.cordova.plugins.screenorientation/www/screenorientation.js",
+        "id": "net.yoik.cordova.plugins.screenorientation.screenorientation",
+        "clobbers": [
+            "cordova.plugins.screenorientation"
+        ]
+    },
+    {
+        "file": "plugins/net.yoik.cordova.plugins.screenorientation/www/screenorientation.android.js",
+        "id": "net.yoik.cordova.plugins.screenorientation.screenorientation.android",
+        "merges": [
+            "cordova.plugins.screenorientation"
+        ]
+    },
+    {
+        "file": "plugins/nl.x-services.plugins.insomnia/www/Insomnia.js",
+        "id": "nl.x-services.plugins.insomnia.Insomnia",
+        "clobbers": [
+            "window.plugins.insomnia"
+        ]
+    },
+    {
+        "file": "plugins/org.apache.cordova.device/www/device.js",
+        "id": "org.apache.cordova.device.device",
+        "clobbers": [
+            "device"
+        ]
+    },
+    {
         "file": "plugins/org.apache.cordova.device-motion/www/Acceleration.js",
         "id": "org.apache.cordova.device-motion.Acceleration",
         "clobbers": [
@@ -47,6 +75,9 @@ module.exports = [
 module.exports.metadata = 
 // TOP OF METADATA
 {
+    "net.yoik.cordova.plugins.screenorientation": "1.2.1",
+    "nl.x-services.plugins.insomnia": "4.0.1",
+    "org.apache.cordova.device": "0.2.12-dev",
     "org.apache.cordova.device-motion": "0.2.10-dev",
     "org.apache.cordova.dialogs": "0.2.10-dev",
     "org.apache.cordova.splashscreen": "0.3.3-dev",

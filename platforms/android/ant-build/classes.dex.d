@@ -1,4 +1,5 @@
 /var/www/html/river_taxi/platforms/android/ant-build/classes.dex : \
+/var/www/html/river_taxi/platforms/android/ant-build/classes/net/yoik/cordova/plugins/screenorientation/YoikScreenOrientation.class \
 /var/www/html/river_taxi/platforms/android/ant-build/classes/org/tbo/rivertaxi/BuildConfig.class \
 /var/www/html/river_taxi/platforms/android/ant-build/classes/org/tbo/rivertaxi/R.class \
 /var/www/html/river_taxi/platforms/android/ant-build/classes/org/tbo/rivertaxi/R$attr.class \
@@ -6,6 +7,7 @@
 /var/www/html/river_taxi/platforms/android/ant-build/classes/org/tbo/rivertaxi/R$xml.class \
 /var/www/html/river_taxi/platforms/android/ant-build/classes/org/tbo/rivertaxi/R$string.class \
 /var/www/html/river_taxi/platforms/android/ant-build/classes/org/tbo/rivertaxi/RiverTaxi.class \
+/var/www/html/river_taxi/platforms/android/ant-build/classes/org/apache/cordova/device/Device.class \
 /var/www/html/river_taxi/platforms/android/ant-build/classes/org/apache/cordova/devicemotion/AccelListener.class \
 /var/www/html/river_taxi/platforms/android/ant-build/classes/org/apache/cordova/devicemotion/AccelListener$1.class \
 /var/www/html/river_taxi/platforms/android/ant-build/classes/org/apache/cordova/dialogs/Notification$2$3.class \
@@ -28,4 +30,7 @@
 /var/www/html/river_taxi/platforms/android/ant-build/classes/org/apache/cordova/dialogs/Notification$5$1.class \
 /var/www/html/river_taxi/platforms/android/ant-build/classes/org/apache/cordova/vibration/Vibration.class \
 /var/www/html/river_taxi/platforms/android/ant-build/classes/org/apache/cordova/splashscreen/SplashScreen.class \
+/var/www/html/river_taxi/platforms/android/ant-build/classes/nl/xservices/plugins/Insomnia$2.class \
+/var/www/html/river_taxi/platforms/android/ant-build/classes/nl/xservices/plugins/Insomnia$1.class \
+/var/www/html/river_taxi/platforms/android/ant-build/classes/nl/xservices/plugins/Insomnia.class \
 /var/www/html/river_taxi/platforms/android/ant-build/dexedLibs/classes-ceb571cf52e1532e97286dd58d588b3d.jar \

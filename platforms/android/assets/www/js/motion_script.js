@@ -3,30 +3,41 @@ var watchID = null;
 var frequency = 200;
 
 var points = 0;
-var life = 250;
+var life = 25;
 
 // Wait for device API libraries to load
 document.addEventListener("deviceready", onDeviceReady, false);
 
 // device APIs are available
-function onDeviceReady() {    
-    $('.ui-loader').remove();
-    
-    $('#accelerometer').hide();
-    
-    $('#start_button').click(function() {
-        $('#start_button').hide();
-        startWatch();
-    });
-    
-    $( "#pause_button" ).click(function() {
+function onDeviceReady() {
+    $('#pause_button').hide();   
+    $("#pause_button").click(function() {
         stopWatch();
         $('#start_button').show();
+        $('#pause_button').hide();
+        window.plugins.insomnia.allowSleepAgain();
+        if(screen.orientation != 'undefined') screen.unlockOrientation();
     });
     
-    $( "#reload_button" ).click(function() {
-        location.reload();
+    
+    $('#accelerometer').slideUp(3000);
+    $('#start_button').fadeIn(3000, function(){
+        $('#start_button').click(function() {
+            $('#start_button').hide();
+            $('#pause_button').show();
+            startWatch();
+            window.plugins.insomnia.keepAwake();
+            if(screen.orientation != 'undefined') screen.lockOrientation(getScreenOrientation(window.orientation));
+        });
+        $('#start_button').click();
     });
+    $('#reload_button').fadeIn(3000, function(){
+        $( "#reload_button" ).click(function() {
+            location.reload();
+        });        
+    });
+    
+    $('.ui-loader').remove();
 }
 
 // Start watching the acceleration
@@ -48,12 +59,6 @@ function stopWatch() {
 
 // onSuccess: Get a snapshot of the current acceleration
 function onSuccess(acceleration) {
-    /*var element = document.getElementById('accelerometer');
-    element.innerHTML = 'Acceleration X: ' + acceleration.x + '<br />' +
-            'Acceleration Y: ' + acceleration.y + '<br />' +
-            'Acceleration Z: ' + acceleration.z + '<br />' +
-            'Timestamp: ' + acceleration.timestamp + '<br />' +
-            'Window orientation: ' +window.orientation + '<br />';*/
     moveObject(acceleration);
     updateInfoBox();
 }
@@ -66,8 +71,22 @@ function updateInfoBox() {
     var date = new Date();
     
     if(life<1) {
-        alert( "GAME OVER!\nYou have earned "+points+" points.");
-        location.reload();
+        stopWatch();
+        $('#start_button').fadeOut(2000);
+        $('#pause_button').fadeOut(2000);
+        $('#reload_button').fadeOut(2000);
+        
+        $('.reload_button').click(function(){
+            $('#reload_button').click();
+        });
+        
+        $('.top5_button').click(function(){
+            $('.total_score').hide();
+            $('.top5').show();
+        });
+        
+        $('.total_score span').html(points);
+        $(".summary").fadeIn(2000);
     }
 }
 
@@ -82,10 +101,12 @@ function getSign(number) {
 }
 
 // moveObject
+var moveX = 0;
+var moveY = 0;
 function moveObject(acceleration) {
     var minDistanceFromBorder = [];
-    minDistanceFromBorder['top'] = 120;
-    minDistanceFromBorder['bottom'] = 20;
+    minDistanceFromBorder['top'] = 180;
+    minDistanceFromBorder['bottom'] = 90;
     minDistanceFromBorder['right'] = 20;
     minDistanceFromBorder['left'] = 20;
 
@@ -98,11 +119,11 @@ function moveObject(acceleration) {
     var rightBoundary = wall.width() - myObj.width() - minDistanceFromBorder['right'];
     var bottomBoundary = wall.height()- myObj.height() - minDistanceFromBorder['bottom'];
 
-    var moveX = 0;
-    var moveY = 0;
+    moveX = 0;
+    moveY = 0;
     var speed = frequency/8;
-    var animationSpeed = frequency-1;
-    var stability = 0.5;
+    var animationSpeed = frequency-10;
+    var stability = 0.2;
         
     if (Math.abs(acceleration.x) > stability) {
         moveX = -acceleration.x * speed;
@@ -129,43 +150,53 @@ function moveObject(acceleration) {
         moveX = -moveX;
     }
     
+    $('.points span').html(points);
+    rotateKanuXY(moveX,moveY,animationSpeed);
+    
+    //limit for move
+    var maxMove = 15;
+    var mod = 1;
+    if(Math.abs(moveX)>maxMove && Math.abs(moveX)>Math.abs(moveY)) mod = maxMove/Math.abs(moveX);
+    else if(Math.abs(moveY)>maxMove) mod = maxMove/Math.abs(moveY);
+    moveX=Math.floor(moveX*mod);
+    moveY=Math.floor(moveY*mod);
+    
     direction = 'C';
     if(current_row>0 && prev_deg<270 && prev_deg>90) direction = 'S';
     if(prev_deg>=270 || prev_deg<=90) direction = 'N';
     
-    rotateKanuXY(moveX,moveY,animationSpeed);
-    
-    var speedMod = (-0.5+(objOffset.top-topBoundary)/(bottomBoundary-topBoundary))*2;
-    $('.points').html("Points: "+points);
-    moveX = moveX;
-    moveY = moveY;
-    
-    var moveLeft = getSign(moveX)+'='+Math.abs(moveX);
-    var moveTop = getSign(moveY)+'='+Math.abs(moveY);
-
     checkPassengers(objOffset.left+moveX, objOffset.top+moveY);
     
-    var collisionDetected = checkPointCollisionWithObstacles(objOffset.left+moveX, objOffset.top+moveY);
+    checkPointCollisionWithObstacles(objOffset.left+moveX, objOffset.top+moveY);
+    
     if(objOffset.left+moveX > rightBoundary || objOffset.left+moveX < leftBoundary || objOffset.top+moveY < topBoundary || objPosition.top+moveY > bottomBoundary) {
-    //if object is out of screen
-        var left = objOffset.left;
-        var top = objOffset.top;
-        if(objOffset.left > rightBoundary) left = rightBoundary;
-        if(objOffset.left < leftBoundary) left = leftBoundary;
-        if(objOffset.top < topBoundary) top = topBoundary;
-        if(objOffset.top > bottomBoundary) top = bottomBoundary;
-        
-        myObj.offset({ top: top, left: left });
-    } else {
-        if(!collisionDetected) {
-            //move object according to accelerometer if it will not cause collision
-            myObj.stop().animate({
-                left: moveLeft,
-                top: moveTop
-            }, animationSpeed);
+        if(objOffset.left > rightBoundary) {
+            if(moveX>0) moveX=-1;
+            if(objOffset.left-rightBoundary > 2*maxMove) moveX = rightBoundary-objOffset.left;
+        }
+        if(objOffset.left < leftBoundary) {
+            if(moveX<0) moveX=1;
+            if(leftBoundary-objOffset.left > 2*maxMove) moveX = leftBoundary-objOffset.left;
+        }
+        if(objOffset.top < topBoundary) {
+            if(moveY<0) moveY=1;
+            if(direction=='S' && topBoundary-objOffset.top > 2*maxMove) moveY = topBoundary-objOffset.top;
+        }
+        if(objOffset.top > bottomBoundary) {
+            if(moveY>0) moveY=-1;
+            if(direction=='N' && objOffset.top-bottomBoundary > 2*maxMove) moveY = bottomBoundary-objOffset.top;
         }
     }
-        
+    
+    //move object according to accelerometer if it will not cause collision
+    var moveLeft = getSign(moveX) + '=' + Math.abs(moveX);
+    var moveTop = getSign(moveY) + '=' + Math.abs(moveY);
+
+    myObj.stop().animate({
+        left: moveLeft,
+        top: moveTop
+    }, animationSpeed);
+    
     nextObestacles();
 }
 
@@ -180,8 +211,16 @@ function checkPassengers(oLeft, oTop){
                 passenger.css('background-color','yellow');
                 passenger.parent().remove();
                 $('#kanu .passenger').show();
-                passenger_destination_row = Math.abs(current_row + Math.floor((Math.random() * 50) -20));
-                $('#param_info').html('Passenger travels to: '+passenger_destination_row);     
+                
+                passenger_destination_row = current_row + Math.floor(Math.random() * 40)-20;
+                if(passenger_destination_row>10 && passenger_destination_row<current_row) passenger_destination_row = passenger_destination_row-10;
+                else passenger_destination_row = passenger_destination_row+10;
+                passenger_destination_row = Math.abs(passenger_destination_row);
+                
+                $('#param_info').find('.destination').html(passenger_destination_row);
+                $('#param_info').find('.arrow').html(getDestinationArrow());
+                $('#param_info').show().addClass('important_info').hide().fadeIn(2000, function(){ $(this).removeClass('important_info'); });
+                navigator.notification.vibrate(200);
             }
         });
     } else {
@@ -193,11 +232,20 @@ function checkPassengers(oLeft, oTop){
                 passenger.parent().remove();
                 $('#kanu .passenger').hide();
                 passenger_destination_row = 0;
-                $('#param_info').html(''); 
-                points++;                         
+                $('#param_info').hide(); 
+                points++;
+                $('.points').addClass('important_info').hide().fadeIn(2000, function(){ $(this).removeClass('important_info'); });
+                navigator.notification.vibrate(200);
             }
         });
     }    
+}
+
+function getDestinationArrow() {
+    if(current_row < passenger_destination_row) return '&#8657;';
+    if(current_row-nb_obstacles < passenger_destination_row) return '&#8661;';
+    if(current_row-nb_obstacles > passenger_destination_row) return '&#8659;';
+    return '';
 }
 
 function checkPointCollisionWithObstacles(oLeft, oTop) {
@@ -212,8 +260,15 @@ function checkPointCollisionWithObstacles(oLeft, oTop) {
         var obstacle = $(this);
         if( detectCollisionPointBox(oLeft,oTop,obstacle,kanuRadius) ) {
             collisionLdetected = true;
-            var obstaclePosition = obstacle.offset();
-            point.offset({ left: obstaclePosition.left+obstacle.width()+kanuRadius });
+            
+            //behavior canoe in case of a collision with the edge L
+            var obstacleOffset = obstacle.offset();
+            var oDistance = obstacleOffset.left+obstacle.width()-oLeft;
+            moveX=moveX+5;
+            if(moveX<=0 || Math.abs(oDistance)>kanuRadius) {
+                moveX = oDistance;
+                direction='C';
+            }
         }
     });
     
@@ -221,18 +276,26 @@ function checkPointCollisionWithObstacles(oLeft, oTop) {
         var obstacle = $(this);
         if( detectCollisionPointBox(oLeft,oTop,obstacle,kanuRadius) ) {
             collisionRdetected = true;
-            var obstaclePosition = obstacle.offset();
-            point.offset({ left: obstaclePosition.left-kanuRadius });
+            
+            //behavior canoe in case of a collision with the edge R
+            var obstacleOffset = obstacle.offset();
+            var oDistance = obstacleOffset.left-oLeft;
+            moveX=moveX-5;
+            if(moveX>=0 || Math.abs(oDistance)>kanuRadius) {
+                moveX = oDistance;
+                direction='C';
+            }
         }
     });
     
     if(collisionLdetected ||  collisionRdetected) {
         life--;
+        $('.life').addClass('important_info');
         $('#kanu').addClass('kanuInDanger');
-        //navigator.notification.vibrate(frequency/2);
         return true;
     } else $('#kanu').removeClass('kanuInDanger');
     
+    $('.life').removeClass('important_info');
     return false;
 }
 
@@ -335,7 +398,7 @@ function setDefaultRiverParams(direction) {
     riverParams[direction,'idiv'] = nb_obstacles/(2*Math.PI);
     riverParams[direction,'mul'] = 10;
     riverParams[direction,'center'] = 50;
-    riverParams[direction,'space'] = 20;
+    riverParams[direction,'space'] = 35;
     riverParams[direction,'center_mod'] = 0;
     riverParams[direction,'center_mod_next_change'] = 10;
     riverParams[direction,'space_mod'] = 0;
@@ -361,44 +424,54 @@ function updateObestaclesSettings() {
         }   
         riverParams[direction,'space'] += riverParams[direction,'space_mod'];
         
-        correctObestaclesSettings()
+        correctObestaclesSettings();
     }
 }
 
 function correctObestaclesSettings() {
     if(riverParams[direction,'space']<15) { riverParams[direction,'space_mod']=1; }
-    if(riverParams[direction,'space']>40) { riverParams[direction,'space_mod']=-1; }
-    if(riverParams[direction,'center']-5<riverParams[direction,'space']/2) { riverParams[direction,'center_mod']=1; }
-    if(riverParams[direction,'center']+5>(100-riverParams[direction,'space']/2)) { riverParams[direction,'center_mod']=-1; }
+    if(riverParams[direction,'space']>30) { riverParams[direction,'space_mod']=-1; }
+    
+    if(riverParams[direction,'center']-20<riverParams[direction,'space']) { riverParams[direction,'center_mod']=1; }
+    if(riverParams[direction,'center']+20>(100-riverParams[direction,'space'])) { riverParams[direction,'center_mod']=-1; }
+    
+    if(riverParams[direction,'center']-10<riverParams[direction,'space']) { riverParams[direction,'center_mod']=2; }
+    if(riverParams[direction,'center']+10>(100-riverParams[direction,'space'])) { riverParams[direction,'center_mod']=-2; }
+    
+    if(riverParams[direction,'center']<riverParams[direction,'space']) { riverParams[direction,'center_mod']=3; }
+    if(riverParams[direction,'center']>(100-riverParams[direction,'space'])) { riverParams[direction,'center_mod']=-3; }
 }
 
 function setObestacles() {
-    nb_obstacles = Math.ceil(Math.max($('#wrapper').height(),$('#wrapper').width())/30);
+    nb_obstacles = Math.ceil(Math.max($('#wrapper').height(),$('#wrapper').width())/30)+1;
     riverParams[direction,'idiv'] = nb_obstacles/(2*Math.PI);
     
     var boxL = $('#obstacles_box_L');
     var boxR = $('#obstacles_box_R');
     var obstacle = $('#obstacle_tpl');
-    
-    for (var row = 0; row < nb_obstacles; row++) {
+    direction = 'N';
+    for (var row = 1; row <= nb_obstacles; row++) {
         riverParams[direction,'sinmod'] = Math.sin(row/riverParams[direction,'idiv'])*riverParams[direction,'mul'];
         obstacle.children('.obstacle').css('left',(-riverParams[direction,'space']-(100-riverParams[direction,'center'])+riverParams[direction,'sinmod'])+"%");
         boxL.append(obstacle.html());
         obstacle.children('.obstacle').css('left',(riverParams[direction,'space']+riverParams[direction,'center']+riverParams[direction,'sinmod'])+"%");
         boxR.append(obstacle.html());
+        
+        boxL.children('.obstacle').last().data('obstacleId',-row);
+        boxR.children('.obstacle').last().data('obstacleId',-row);
     }
-    direction = 'N';
 }
 
 function nextObestacles() {
+    moveCompressedToBuffors();
     var boxL = $('#obstacles_box_L');
     var boxR = $('#obstacles_box_R');
     var obstacle = $('#obstacle_tpl');
-    
-    if(boxL.children('.obstacle').length<10) setObestacles();
+    if(boxL.children('.obstacle').length<5) setObestacles();
 
     if(direction=='S') {
         if($('#buffor_LS .obstacle').length == 0) {
+            obstacle.children('.obstacle').removeClass('compress').removeClass('decompress');
             riverParams[direction,'sinmod'] = Math.sin((current_row+nb_obstacles)/riverParams[direction,'idiv'])*riverParams[direction,'mul'];
             obstacle.children('.obstacle').css(
                 'left',(-riverParams[direction,'space']-(100-riverParams[direction,'center'])+riverParams[direction,'sinmod'])+"%"
@@ -420,32 +493,32 @@ function nextObestacles() {
             $('#buffor_RS').children('.obstacle').last().appendTo(boxR);
         }
         
+        //add compress css animation to the first obstacles
         var firstL = boxL.children('.obstacle').first();
         var firstR = boxR.children('.obstacle').first();
-        firstL.removeClass('decompress').removeClass('compress');
-        firstR.removeClass('decompress').removeClass('compress');
-
-        setTimeout(function() { firstL.height(25); firstR.height(25); }, 30);
-        setTimeout(function() { firstL.height(20); firstR.height(20); }, 60);
-        setTimeout(function() { firstL.height(15); firstR.height(15); }, 90);
-        setTimeout(function() { firstL.height(10); firstR.height(10); }, 120);
-        setTimeout(function() { firstL.height(5); firstR.height(5); }, 150);
-        setTimeout(function() { 
-            firstL.appendTo('#buffor_LN').height(30);
-            firstR.appendTo('#buffor_RN').height(30);
-        }, 180);
+        firstL.removeClass('decompress').addClass('compress');
+        firstR.removeClass('decompress').addClass('compress');
+        firstL.html(firstL.html());
+        firstR.html(firstR.html());
+        //firstL and firstR will be moved to bufor at the start of next steep
     }
     else if(direction=='N') {
         if($('#buffor_LN .obstacle').length == 0) {
+            obstacle.children('.obstacle').removeClass('compress').addClass('decompress');
             riverParams[direction,'sinmod'] = Math.sin((current_row)/riverParams[direction,'idiv'])*riverParams[direction,'mul'];
+            
             obstacle.children('.obstacle').css('left',(-riverParams[direction,'space']-(100-riverParams[direction,'center'])+riverParams[direction,'sinmod'])+"%");
             boxL.prepend(obstacle.html());
-            boxL.children('.obstacle').first().removeClass('compress').addClass('decompress');
-            obstacle.children('.obstacle').css('left',(riverParams[direction,'space']+riverParams[direction,'center']+riverParams[direction,'sinmod'])+"%");
+            
+            obstacle.children('.obstacle').css('left',(riverParams[direction,'space']+riverParams[direction,'center']+riverParams[direction,'sinmod'])+"%");            
             boxR.prepend(obstacle.html());
-            boxR.children('.obstacle').first().removeClass('compress').addClass('decompress');
+            
             addContent(boxL.children('.obstacle').first());
             addContent(boxR.children('.obstacle').first());
+            
+            boxL.children('.obstacle').first().data('obstacleId',current_row);
+            boxR.children('.obstacle').first().data('obstacleId',current_row);
+            
             updateObestaclesSettings();
         }
         else {
@@ -458,6 +531,11 @@ function nextObestacles() {
         boxR.children('.obstacle').last().appendTo('#buffor_RS');
     }
     addPassengerDestination();
+}
+
+function moveCompressedToBuffors(){
+    $('#obstacles_box_L').children('.compress').first().appendTo('#buffor_LN');
+    $('#obstacles_box_R').children('.compress').first().appendTo('#buffor_RN');
 }
 
 function addContent(box) {
@@ -478,17 +556,27 @@ var passenger_destination_row = 0;
 var destination_inserted = false;
 function addPassengerDestination() {
     if(passenger_destination_row==0) destination_inserted=false;
-    if(current_row==passenger_destination_row && current_row!=0 && !destination_inserted) {
-        var passengerDestTpl = $('#passenger_destination_tpl');
-        if(current_row%2==1) {
-            if(direction=='S') var box=$('#obstacles_box_L').children('.obstacle').last();
-            else var box=$('#obstacles_box_L').children('.obstacle').first(); 
-        } else {
-            if(direction=='S') var box=$('#obstacles_box_R').children('.obstacle').last();
-            else var box=$('#obstacles_box_R').children('.obstacle').first(); 
-        }
-        box.append(passengerDestTpl.html());
-        box.find('.passenger_destination').html(passenger_destination_row);
-        destination_inserted=true;
+    else $('#param_info').find('.arrow').html(getDestinationArrow());
+    
+    if(destination_inserted==false && passenger_destination_row!=0) {
+        var site = 'L';
+        if(passenger_destination_row%2==1) site = 'R';
+        
+        $('#obstacles_box_'+site).children('.obstacle').each(function(){
+            if($(this).data('obstacleId') == passenger_destination_row) {
+                var passengerDestTpl = $('#passenger_destination_tpl');
+                $(this).append(passengerDestTpl.html());
+                $(this).find('.passenger_destination').html(passenger_destination_row);
+                destination_inserted=true;
+            }
+        });
     }
+}
+
+function getScreenOrientation(windowOrientation) {
+    if(windowOrientation == 0) return 'portrait-primary';
+    if(windowOrientation == 90) return 'landscape-primary';
+    if(windowOrientation == 180) return 'portrait-secondary';
+    if(windowOrientation == -90) return 'landscape-secondary';
+    return 'portrait-primary';
 }
