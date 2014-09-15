@@ -3,7 +3,7 @@ var watchID = null;
 var frequency = 200;
 
 var points = 0;
-var life = 250;
+var life = 25;
 
 // Wait for device API libraries to load
 document.addEventListener("deviceready", onDeviceReady, false);
@@ -59,12 +59,6 @@ function stopWatch() {
 
 // onSuccess: Get a snapshot of the current acceleration
 function onSuccess(acceleration) {
-    /*var element = document.getElementById('accelerometer');
-    element.innerHTML = 'Acceleration X: ' + acceleration.x + '<br />' +
-            'Acceleration Y: ' + acceleration.y + '<br />' +
-            'Acceleration Z: ' + acceleration.z + '<br />' +
-            'Timestamp: ' + acceleration.timestamp + '<br />' +
-            'Window orientation: ' +window.orientation + '<br />';*/
     moveObject(acceleration);
     updateInfoBox();
 }
@@ -77,8 +71,22 @@ function updateInfoBox() {
     var date = new Date();
     
     if(life<1) {
-        alert( "GAME OVER!\nYou have earned "+points+" points.");
-        location.reload();
+        stopWatch();
+        $('#start_button').fadeOut(2000);
+        $('#pause_button').fadeOut(2000);
+        $('#reload_button').fadeOut(2000);
+        
+        $('.reload_button').click(function(){
+            $('#reload_button').click();
+        });
+        
+        $('.top5_button').click(function(){
+            $('.total_score').hide();
+            $('.top5').show();
+        });
+        
+        $('.total_score span').html(points);
+        $(".summary").fadeIn(2000);
     }
 }
 
@@ -142,7 +150,7 @@ function moveObject(acceleration) {
         moveX = -moveX;
     }
     
-    $('.points').html("Points: "+points);
+    $('.points span').html(points);
     rotateKanuXY(moveX,moveY,animationSpeed);
     
     //limit for move

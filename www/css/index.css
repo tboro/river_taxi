@@ -70,9 +70,61 @@ header > span.title{
     background-color: #A3DAFF;
 }
 
+.summary {
+    position:absolute;
+    z-index:95;
+    width:100%;
+    height:100%;
+    background: #188199;
+    overflow: auto;
+    display: none;
+}
+
+.summary_message {
+    width: 100%;
+    text-align: center;
+    color: #FFFFFF;
+    margin: 0;
+}
+
+.summary_message .table_box {
+    border: 3px solid #FFFFFF;
+    border-radius: 10px;
+    width: 80%;
+    margin-left: 10%;
+}
+
+.summary_message table {
+    border-collapse: collapse;
+    width: 100%;
+    padding: 4px;
+}
+
+.summary_message td, .summary_message th {
+    border: 1px solid #FFFFFF;
+}
+
+.save_button, .reload_button,  .top5_button {
+    border-radius: 20px;
+    background: #188199;
+    color: #FFFFFF;
+    border: 5px solid #FFFFFF;
+    width: 80%;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 15px;
+    margin-left: 10%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.top5 {
+    display: none;
+}
+
 .info_box {
     position: absolute;
-    z-index: 100;
+    z-index: 90;
     width:100%;
     padding-top:5px;
     padding-bottom:5px;
