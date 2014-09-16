@@ -16,7 +16,7 @@ function onDeviceReady() {
         $('#start_button').show();
         $('#pause_button').hide();
         window.plugins.insomnia.allowSleepAgain();
-        if(screen.orientation != 'undefined') screen.unlockOrientation();
+        if(typeof(screen.orientation) != "undefined") screen.unlockOrientation();
     });
     
     
@@ -27,7 +27,7 @@ function onDeviceReady() {
             $('#pause_button').show();
             startWatch();
             window.plugins.insomnia.keepAwake();
-            if(screen.orientation != 'undefined') screen.lockOrientation(getScreenOrientation(window.orientation));
+            if(typeof(screen.orientation) != "undefined") screen.lockOrientation(getScreenOrientation(window.orientation));
         });
         $('#start_button').click();
     });
@@ -75,6 +75,8 @@ function updateInfoBox() {
         $('#start_button').fadeOut(2000);
         $('#pause_button').fadeOut(2000);
         $('#reload_button').fadeOut(2000);
+        window.plugins.insomnia.allowSleepAgain();
+        if(typeof(screen.orientation) != "undefined") screen.unlockOrientation();
         
         $('.reload_button').click(function(){
             $('#reload_button').click();
@@ -631,9 +633,13 @@ function rankingMinScore(ranking) {
 
 function sortRanking(ranking) {
     ranking.sort(function(a,b){
-        if(a!=null && b!=null) var x = a.score > b.score ? -1 : 1; 
-        else var x = (a!=null) > (b!=null) ? -1 : 1;
-        return x; 
+        var x = 1;
+        if(a!=null && b!=null) {
+            if(a.score > b.score || (a.score == b.score && parseInt(a.time) < parseInt(b.time) ) ) x = -1
+            else x = 1;
+        } 
+        else x = (a!=null) > (b!=null) ? -1 : 1;
+        return x;
     });
     return ranking;
 }
