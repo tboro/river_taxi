@@ -19,10 +19,14 @@
                 <div class="summary_message">
                     <div class="total_score">
                         <h1>YOUR SCORE: <span>5</span></h1>
-                        Congratulations!
-                        <br/>This is one of the best 5 scores.
-                        <input name="player_name" placeholder="enter your name"/>
-                        <div class="save_button">SAVE THIS RESULT</div>
+                        
+                        <div class="save_score">
+                            <h3>Congratulations!</h3>
+                            This is one of the best 5 scores.
+                            <br/>Enter your name or nick to add  this score to the TOP5 list.
+                            <input id="player_name" name="player_name" placeholder="enter your name or nick"/>
+                        </div>
+                        
                         <div class="top5_button">See top 5 scores</div>
                     </div>
                     <div class="top5">
@@ -30,40 +34,20 @@
                         <div class="table_box">
                             <table>
                                 <tr>
-                                    <th>Rank</th><th>Name</th><th>Score</th><th>Time</th>
+                                    <th>Rank</th><th>Name</th><th>Score</th><th>Date</th>
                                 </tr>
+                            </table>
+                        </div>
+                        <div class="table_entry_tpl" style="display:none;">
+                            <table>
                                 <tr>
                                     <td class="rank">1</td>
                                     <td class="name">still to come!</td>
                                     <td class="score">-</td>
                                     <td class="time">-</td>
                                 </tr>
-                                <tr>
-                                    <td class="rank">2</td>
-                                    <td class="name">still to come!</td>
-                                    <td class="score">-</td>
-                                    <td class="time">-</td>
-                                </tr>
-                                <tr>
-                                    <td class="rank">3</td>
-                                    <td class="name">still to come!</td>
-                                    <td class="score">-</td>
-                                    <td class="time">-</td>
-                                </tr>
-                                <tr>
-                                    <td class="rank">4</td>
-                                    <td class="name">still to come!</td>
-                                    <td class="score">-</td>
-                                    <td class="time">-</td>
-                                </tr>
-                                <tr>
-                                    <td class="rank">5</td>
-                                    <td class="name">still to come!</td>
-                                    <td class="score">-</td>
-                                    <td class="time">-</td>
-                                </tr>
                             </table>
-                        </div>
+                        </div>    
                     </div>
                     
                     <div class="reload_button">Play again!</div>
