@@ -784,7 +784,7 @@
 /var/www/html/river_taxi/platforms/android/assets/www/res/icon/bada-wac/icon-48-type5.png \
 /var/www/html/river_taxi/platforms/android/assets/www/res/icon/bada-wac/icon-50-type3.png \
 /var/www/html/river_taxi/platforms/android/assets/www/res/icon/bada-wac/icon-80-type4.png \
-/var/www/html/river_taxi/platforms/android/assets/www/res/icon/windows-phone/icon-173-tile.png \
+/var/www/html/river_taxi/platforms/android/assets/www/res/icon/windows-phone/icon173.png \
 /var/www/html/river_taxi/platforms/android/assets/www/res/icon/windows-phone/icon-62-tile.png \
 /var/www/html/river_taxi/platforms/android/assets/www/res/icon/windows-phone/icon-48.png \
 /var/www/html/river_taxi/platforms/android/assets/www/res/icon/blackberry/icon-80.png \

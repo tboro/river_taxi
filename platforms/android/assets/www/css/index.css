@@ -90,8 +90,14 @@ header > span.title{
 .summary_message .table_box {
     border: 3px solid #FFFFFF;
     border-radius: 10px;
-    width: 80%;
-    margin-left: 10%;
+    width: 90%;
+    margin-left: 5%;
+    overflow: auto;
+    font-size: 12px; 
+}
+
+.summary_message input {
+    font-size: 15px;
 }
 
 .summary_message table {
@@ -102,6 +108,14 @@ header > span.title{
 
 .summary_message td, .summary_message th {
     border: 1px solid #FFFFFF;
+}
+
+.summary_message .current tr {
+    background: #ffa500;
+}
+
+.time {
+    font-size: 10px;
 }
 
 .save_button, .reload_button,  .top5_button {
