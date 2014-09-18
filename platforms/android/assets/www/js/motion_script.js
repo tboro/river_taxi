@@ -16,7 +16,7 @@ function onDeviceReady() {
         $('#start_button').show();
         $('#pause_button').hide();
         window.plugins.insomnia.allowSleepAgain();
-        if(screen.orientation != 'undefined') screen.unlockOrientation();
+        if(typeof(screen.orientation) != "undefined") screen.unlockOrientation();
     });
     
     
@@ -27,7 +27,7 @@ function onDeviceReady() {
             $('#pause_button').show();
             startWatch();
             window.plugins.insomnia.keepAwake();
-            if(screen.orientation != 'undefined') screen.lockOrientation(getScreenOrientation(window.orientation));
+            if(typeof(screen.orientation) != "undefined") screen.lockOrientation(getScreenOrientation(window.orientation));
         });
         $('#start_button').click();
     });
@@ -75,17 +75,44 @@ function updateInfoBox() {
         $('#start_button').fadeOut(2000);
         $('#pause_button').fadeOut(2000);
         $('#reload_button').fadeOut(2000);
+        window.plugins.insomnia.allowSleepAgain();
+        if(typeof(screen.orientation) != "undefined") screen.unlockOrientation();
         
         $('.reload_button').click(function(){
             $('#reload_button').click();
         });
         
-        $('.top5_button').click(function(){
+        $('.top5_button').click(function (){
             $('.total_score').hide();
+            setTopTable(ranking);
             $('.top5').show();
         });
         
         $('.total_score span').html(points);
+        
+        var ranking = getRanking();
+        if(rankingMinScore(ranking)<points) {
+            $('.save_score').show();
+            $('#player_name').change(function(){
+                var name = $('#player_name').val();
+                var time = new Date().getTime();
+                ranking[4] = { "name": name, "score": points, "time": time };
+                
+                saveRanking(ranking);
+                $('.top5_button').click();
+            });
+        }
+        else {
+            $('.save_score').hide();
+        }
+        
+        if(ranking.length > 0) {            
+            $('.top5_button').show();
+        }
+        else {
+            $('.top5_button').hide();
+        }
+        
         $(".summary").fadeIn(2000);
     }
 }
@@ -323,16 +350,6 @@ function detectCollision(obj1,obj2,minDistance) {
     
     return false;
 }
-
-/*function rotateObject(object,deg) {
-    object.css({
-        '-moz-transform':'rotate('+deg+'deg)',
-        '-webkit-transform':'rotate('+deg+'deg)',
-        '-o-transform':'rotate('+deg+'deg)',
-        '-ms-transform':'rotate('+deg+'deg)',
-        'transform': 'rotate('+deg+'deg)'
-    });
-}*/
 
 var prev_deg = 0;
 function rotateKanuXY(a,b,animationSpeed) {
@@ -579,4 +596,64 @@ function getScreenOrientation(windowOrientation) {
     if(windowOrientation == 180) return 'portrait-secondary';
     if(windowOrientation == -90) return 'landscape-secondary';
     return 'portrait-primary';
+}
+
+function setTopTable(ranking) {
+    var rankingTable = $('.table_box table');
+    rankingTable.find('.rank').parent().remove();
+    for (var i = 0; i < 5; i++) {
+        var entry = $('.table_entry_tpl table').clone();
+        var rank = i+1;
+        entry.find('.rank').html(rank);
+        if(ranking[i]) {
+            var data = ranking[i];
+            var time = new Date(data.time);
+            var current_time = new Date();
+            if((current_time.getTime()-time.getTime()) < 1000) {
+                entry.children().addClass('current');
+            }
+            
+            entry.find('.name').html(data.name);
+            entry.find('.score').html(data.score);
+            entry.find('.time').html(time);
+        }
+        
+        rankingTable.append(entry.html());
+    }
+}
+
+function rankingMinScore(ranking) {
+    var minScore = 0;
+    if(ranking[4]) {
+        var min = ranking[4];
+        if(min.score && min.score!='-') minScore = min.score;
+    }
+    return parseInt(minScore);
+}
+
+function sortRanking(ranking) {
+    ranking.sort(function(a,b){
+        var x = 1;
+        if(a!=null && b!=null) {
+            if(a.score > b.score || (a.score == b.score && parseInt(a.time) < parseInt(b.time) ) ) x = -1
+            else x = 1;
+        } 
+        else x = (a!=null) > (b!=null) ? -1 : 1;
+        return x;
+    });
+    return ranking;
+}
+
+function getRanking() {
+    //window.localStorage.removeItem('river_taxi_ranking');
+    var ranking = new Array();
+    if(window.localStorage.getItem('river_taxi_ranking')) {
+        ranking = JSON.parse(window.localStorage.getItem('river_taxi_ranking'));
+    }
+    return ranking;
+}
+
+function saveRanking(ranking) {
+    ranking = sortRanking(ranking);
+    window.localStorage.setItem('river_taxi_ranking', JSON.stringify(ranking));
 }
