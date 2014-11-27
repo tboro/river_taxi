@@ -1,7 +1,9 @@
-// The watch id references the current `watchAcceleration`
+/*
+ * This is a part of RiverTaxi Phonegap App
+*/
+
 var watchID = null;
 var frequency = 200;
-
 var points = 0;
 var life = 25;
 
